@@ -2,12 +2,12 @@
 
 require_once dirname(__DIR__) . '/models/login_model.php';
 
-class UserController
+class LoginController
 {
-  public function submitForm($name, $hashed_password, $role)
+  public function submitForm($name, $hashed_password)
   {
     $loginModel = new LoginModel();
-    $loginModel->login($name, $hashed_password, $role);
+    $loginModel->login($name, $hashed_password);
 
     $response = ['message' => 'Form submitted successfully'];
     return $response;

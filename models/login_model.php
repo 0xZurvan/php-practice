@@ -11,11 +11,10 @@ class LoginModel
     self::$pdo = Database::connectDB();
   }
 
-  public function login($name, $password, $role)
+  public function login($name, $password)
   {
     try {
-      $tableName = ($role === 'employee') ? 'employees' : 'managers';
-      $query = "INSERT INTO $tableName (name, password) VALUES (:name, :password)";
+      $query = "INSERT INTO managers (name, password) VALUES (:name, :password)";
       $stmt = self::$pdo->prepare($query);
       $stmt->bindParam(':name', $name);
       $stmt->bindParam(':password', $password);

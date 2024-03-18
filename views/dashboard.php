@@ -25,7 +25,6 @@
 
     <!-- Employees table -->
     <div class="container">
-      <h1 class="fs-5">Employees Table</h1><br>
       <table class="table">
         <thead>
           <tr>
