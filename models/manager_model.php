@@ -9,14 +9,19 @@ class ManagerModel
 
   function __construct()
   {
-    self::$pdo = Database::connectDB();
+    if (self::$pdo === null) {
+      $db = new Database();
+      self::$pdo = $db->connectDB();
+    } else {
+      die("Failed to establish database connection.");
+    }
   }
 
   // Read
-  public static function getEmployeeByName($name)
+  public function getEmployeeByName($name)
   {
     try {
-      $query = 'SELECT id, name, salary, insurance_id, status, location, job_title FROM employees WHERE name = :name';
+      $query = 'SELECT * FROM employees WHERE name = :name';
       $stm = self::$pdo->prepare($query);
       $stm->bindParam(':name', $name);
       $stm->execute();
@@ -28,10 +33,10 @@ class ManagerModel
     }
   }
 
-  public static function getAllEmployees()
+  public function getAllEmployees()
   {
     try {
-      $query = 'SELECT id, name, salary, insurance_id, status, location, job_title FROM employees';
+      $query = 'SELECT * FROM employees';
       $stm = self::$pdo->prepare($query);
       $stm->execute();
 
@@ -43,7 +48,7 @@ class ManagerModel
   }
 
   // Write
-  public static function registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title)
+  public function registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title)
   {
     try {
       $query = 'INSERT INTO employees (name, salary, insurance_id, status, location, job_title) VALUES (:name, :salary, :insurance_id, :status, :location, :job_title)';
@@ -60,7 +65,7 @@ class ManagerModel
   }
 
   // Delete
-  public static function deleteEmployeeById($id)
+  public function deleteEmployeeById($id)
   {
     try {
       $query = "DELETE FROM employees WHERE id = :id";

@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
   <title>Dashboard</title>
   <style>
     .main {
@@ -21,7 +23,10 @@
       <button onclick="redirectToLogin()" class="btn btn-primary">Login</button>
     </div>
 
-    <h1 class="fs-3">Dashboard</h1><br>
+    <div class="d-flex flex-row gap-4">
+      <h1 class="fs-3">Dashboard</h1>
+      <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addNewEmployeeModal">Add new employee</button>
+    </div>
 
     <!-- Employees table -->
     <div class="container">
@@ -37,38 +42,109 @@
             <th scope="col">Job Title</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>$2500</td>
-            <td>000102</td>
-            <td>Hired</td>
-            <td>Remote</td>
-            <td>Software Developer</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>$2000</td>
-            <td>000102</td>
-            <td>Hired</td>
-            <td>Office</td>
-            <td>Software Developer</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry the Bird</td>
-            <td>$0</td>
-            <td>000102</td>
-            <td>Interviewing</td>
-            <td>Office</td>
-            <td>Software Developer</td>
-          </tr>
+        <tbody id="employeesTable">
         </tbody>
       </table>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addNewEmployeeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalLabel">Add new employee</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="modalForm" name="modalForm" onsubmit="submitModalForm(event)">
+
+              <label for="name" class="form-label">Name:</label>
+              <input class="form-control" type="text" id="name" name="name"><br>
+
+              <label for="salary" class="form-label">Salary:</label>
+              <input class="form-control" type="number" id="salary" name="salary"><br>
+
+              <label for="insurance_id" class="form-label">Insurance ID:</label>
+              <input class="form-control" type="number" id="insurance_id" name="insurance_id"><br>
+
+              <select id="status" name="status" class="form-select" aria-label="Select employee status">
+                <option selected>Select employee status</option>
+                <option value="Hired">Hired</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Fired">Fired</option>
+              </select><br>
+
+              <select id="location" name="location" class="form-select" aria-label="Select working location">
+                <option selected>Select working location</option>
+                <option value="Office">Office</option>
+                <option value="Remote">Remote</option>
+              </select><br>
+
+              <label for="job_title" class="form-label">Job Title:</label>
+              <input class="form-control" type="text" id="job_title" name="job_title"><br>
+
+              <button type="submit" class="btn btn-success col-md-6">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      fetchEmployeesData()
+    })
+
+    function fetchEmployeesData() {
+      fetch('/routers/manager_router.php?action=getAllEmployees', {
+          method: 'GET'
+        })
+        .then(response => response.json())
+        .then(employees => {
+          console.log('employees', employees)
+          const tableBody = document.getElementById('employeesTable')
+          tableBody.innerHTML = '';
+          employees.forEach(employee => {
+            const row = document.createElement('tr')
+            row.innerHTML = `
+                <td>${employee.id}</td>
+                <td>${employee.name}</td>
+                <td>${employee.salary}</td>
+                <td>${employee.insurance_id}</td>
+                <td>${employee.status}</td>
+                <td>${employee.location}</td>
+                <td>${employee.job_title}</td>
+              `;
+            tableBody.appendChild(row)
+          });
+        })
+        .catch(error => console.error('Error fetching employees data:', error))
+    }
+
+    const modalForm = document.getElementById('modalForm')
+
+    function submitModalForm(event) {
+      event.preventDefault(); // Prevent default form submission
+      const formData = new FormData(modalForm);
+      fetch('/routers/manager_router.php?action=registerNewEmployee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          console.log('Employee registered successfully');
+          // Optionally close the modal or show a success message
+        } else {
+          console.error('Error registering new employee:', response.statusText);
+          // Handle error appropriately
+        }
+      }).catch(error => console.error('Error registering new employee:', error));
+    }
+  </script>
 </body>
 
 </html>

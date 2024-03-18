@@ -4,11 +4,17 @@ require_once dirname(__DIR__) . '/models/manager_model.php';
 
 class ManagerController
 {
+  private static $managerModel;
+
+  function __construct()
+  {
+    self::$managerModel = new ManagerModel();
+  }
   public static function getEmployeeByName($name)
   {
-    $response = ManagerModel::getEmployeeByName($name);
+    $response = self::$managerModel->getEmployeeByName($name);
     if ($response) {
-      return $response;
+      return json_encode($response);
     } else {
       return "Employee not found";
     }
@@ -16,9 +22,9 @@ class ManagerController
 
   public static function getAllEmployees()
   {
-    $response = ManagerModel::getAllEmployees();
+    $response = self::$managerModel->getAllEmployees();
     if ($response) {
-      return $response;
+      return json_encode($response);
     } else {
       return "No employees found";
     }
@@ -26,7 +32,7 @@ class ManagerController
 
   public static function registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title)
   {
-    $response = ManagerModel::registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title);
+    $response = self::$managerModel->registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title);
     if ($response) {
       return "Employee registered successfully";
     } else {
@@ -36,7 +42,7 @@ class ManagerController
 
   public static function deleteEmployeeById($id)
   {
-    $response = ManagerModel::deleteEmployeeById($id);
+    $response = self::$managerModel->deleteEmployeeById($id);
     if ($response) {
       return "Employee deleted successfully";
     } else {

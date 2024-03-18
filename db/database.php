@@ -10,7 +10,7 @@ class Database
   private static $dbPort;
 
 
-  public static function connectDB()
+  public function connectDB()
   {
     if (self::$pdo === null) {
       self::$dotenv = parse_ini_file(dirname(__DIR__) . '/.env');
