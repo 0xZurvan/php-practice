@@ -1,3 +1,4 @@
+<?php session_start();  ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +21,18 @@
     <!-- Nav -->
     <div class="d-flex flex-row justify-content-between">
       <h2 class="fs-5">Logo</h2>
-      <button onclick="redirectToLogin()" class="btn btn-primary">Login</button>
+      <?php
+
+      if (isset($_SESSION['manager'])) {
+        $manager = $_SESSION['manager'];
+
+      ?>
+        <p><?php echo $manager['name'] ?></p>
+      <?php
+      } else {
+      ?>
+        <p>Manager</p>
+      <?php } ?>
     </div>
 
     <div class="d-flex flex-row gap-4">

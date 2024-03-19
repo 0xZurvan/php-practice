@@ -27,7 +27,10 @@
     <!-- Navbar -->
     <div class="position-fixed top-10 d-flex flex-row justify-content-between align-items-center px-4">
       <h2 class="fs-5">Logo</h2>
-      <button onclick="redirectToLogin()" class="btn btn-primary">Login</button>
+      <div>
+        <button onclick="redirectToSignUp()" class="btn btn-primary">Sign Up</button>
+        <button onclick="redirectToLogin()" class="btn btn-success">Login</button>
+      </div>
     </div>
 
     <!-- Content -->
@@ -40,8 +43,12 @@
   </div>
 
   <script>
+    function redirectToSignUp() {
+      window.location.href = "http://localhost:3040/views/sign-up.php";
+    }
+
     function redirectToLogin() {
-      window.location.href = "http://localhost:3000/views/login.php";
+      window.location.href = "http://localhost:3040/views/login.php";
     }
   </script>
 </body>

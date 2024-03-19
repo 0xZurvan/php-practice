@@ -22,7 +22,7 @@
     <div class="col-md-4">
       <h1 class="text-center">Login</h1>
 
-      <form action="/routers/login_router.php" method="POST">
+      <form action="/routers/auth_router.php?action=login" method="POST">
 
         <label for="name" class="form-label">Name:</label>
         <input class="form-control" type="text" id="name" name="name"><br>
