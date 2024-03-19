@@ -40,6 +40,16 @@ class ManagerController
     }
   }
 
+  public function updateEmployee($employeeId, $name, $salary, $insurance_id, $status, $location, $job_title)
+  {
+    $response = self::$managerModel->updateEmployee($employeeId, $name, $salary, $insurance_id, $status, $location, $job_title);
+    if ($response) {
+      return "Employee data updated successfully";
+    } else {
+      return "Failed to update employee data";
+    }
+  } 
+
   public function deleteEmployeeById($id)
   {
     $response = self::$managerModel->deleteEmployeeById($id);

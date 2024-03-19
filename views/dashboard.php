@@ -40,6 +40,7 @@
             <th scope="col">Status</th>
             <th scope="col">Location</th>
             <th scope="col">Job Title</th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody id="employeesTable">
@@ -47,7 +48,7 @@
       </table>
     </div>
 
-    <!-- Modal -->
+    <!-- Add New Employee Modal -->
     <div class="modal fade" id="addNewEmployeeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -56,7 +57,53 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="modalForm" class="was-validated" onsubmit="submitModalForm(event)">
+            <form id="addNewEmployeeModalForm" class="was-validated" onsubmit="submitModalForm(event)">
+
+              <label for="name" class="form-label">Name:</label>
+              <input class="form-control" type="text" id="name" name="name" required><br>
+
+              <label for="salary" class="form-label">Salary:</label>
+              <input class="form-control" type="number" id="salary" name="salary" required><br>
+
+              <label for="insurance_id" class="form-label">Insurance ID:</label>
+              <input class="form-control" type="number" id="insurance_id" name="insurance_id" required><br>
+
+              <select id="status" name="status" class="form-select" aria-label="Select employee status" required>
+                <option selected disabled value="">Select employee status</option>
+                <option value="Hired">Hired</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Fired">Fired</option>
+              </select><br>
+
+              <select id="location" name="location" class="form-select" aria-label="Select working location" required>
+                <option selected disabled value="">Select working location</option>
+                <option value="Office">Office</option>
+                <option value="Remote">Remote</option>
+              </select><br>
+
+              <label for="job_title" class="form-label">Job Title:</label>
+              <input class="form-control" type="text" id="job_title" name="job_title" required><br>
+
+              <button class="btn btn-success col-md-6" data-bs-dismiss="modal" aria-label="Close">Submit</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Employee Modal -->
+    <div class="modal fade" id="updateEmployeeModal" name="updateEmployeeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalLabel">Update employee</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="updateEmployeeModalForm" class="was-validated" onsubmit="submitUpdateModalForm(event)">
+
+              <input type="hidden" id="id" name="id">
 
               <label for="name" class="form-label">Name:</label>
               <input class="form-control" type="text" id="name" name="name" required><br>
@@ -117,6 +164,7 @@
                 <td>${employee.status}</td>
                 <td>${employee.location}</td>
                 <td>${employee.job_title}</td>
+                <td><button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateEmployeeModal" onclick="openUpdateModal(${employee.id})">Update</button></td>
               `;
             tableBody.appendChild(row)
           });
@@ -124,15 +172,20 @@
         .catch(error => console.error('Error fetching employees data:', error))
     }
 
-    function closeModal() {
-      const modal = document.getElementById('addNewEmployeeModal');
+    function openUpdateModal(employeeId) {
+      document.getElementById('id').value = employeeId;
+    }
+
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
       const bootstrapModal = new bootstrap.Modal(modal);
       bootstrapModal.hide();
     }
 
     async function submitModalForm(event) {
       event.preventDefault()
-      const modalForm = document.getElementById('modalForm')
+      const modalForm = document.getElementById('addNewEmployeeModalForm')
       const formData = new FormData(modalForm)
 
       await fetch('/routers/manager_router.php?action=registerNewEmployee', {
@@ -140,8 +193,27 @@
         body: formData
       }).then(async () => {
         await fetchEmployeesData()
-        closeModal()
+        closeModal('addNewEmployeeModal')
       }).catch(error => console.error('Error registering new employee:', error));
+    }
+
+    async function submitUpdateModalForm(event) {
+      event.preventDefault();
+      const updateModalForm = document.getElementById('updateEmployeeModalForm');
+      const formData = new FormData(updateModalForm);
+      formData.append('id', document.getElementById('id').value);
+
+      await fetch('/routers/manager_router.php?action=updateEmployee', {
+          method: 'POST',
+          body: formData
+        })
+        .then(async (response) => {
+          if (response.ok) {
+            await fetchEmployeesData()
+            closeModal('updateEmployeeModal');
+          }
+        })
+        .catch(error => console.error('Error updating employee data:', error));
     }
   </script>
 </body>

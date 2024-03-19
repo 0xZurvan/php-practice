@@ -57,7 +57,23 @@ function handlePOSTRequests()
 
         echo $managerController->registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title);
       } else {
-        echo 'Required parameters are missing.';
+        echo 'Required parameters to register are missing.';
+      }
+      break;
+
+    case 'updateEmployee':
+      if (isset($_POST['id'], $_POST['name'], $_POST['salary'], $_POST['insurance_id'], $_POST['status'], $_POST['location'], $_POST['job_title'])) {
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $salary = $_POST['salary'];
+        $insurance_id = $_POST['insurance_id'];
+        $status = $_POST['status'];
+        $location = $_POST['location'];
+        $job_title = $_POST['job_title'];
+
+        echo $managerController->updateEmployee($id, $name, $salary, $insurance_id, $status, $location, $job_title);
+      } else {
+        echo 'Required parameters to update are missing.';
       }
       break;
 
