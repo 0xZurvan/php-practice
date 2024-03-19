@@ -106,29 +106,29 @@
               <input type="hidden" id="id" name="id">
 
               <label for="name" class="form-label">Name:</label>
-              <input class="form-control" type="text" id="name" name="name" required><br>
+              <input class="form-control" type="text" id="update_name" name="name" required><br>
 
               <label for="salary" class="form-label">Salary:</label>
-              <input class="form-control" type="number" id="salary" name="salary" required><br>
+              <input class="form-control" type="number" id="update_salary" name="salary" required><br>
 
               <label for="insurance_id" class="form-label">Insurance ID:</label>
-              <input class="form-control" type="number" id="insurance_id" name="insurance_id" required><br>
+              <input class="form-control" type="number" id="update_insurance_id" name="insurance_id" required><br>
 
-              <select id="status" name="status" class="form-select" aria-label="Select employee status" required>
+              <select id="update_status" name="status" class="form-select" aria-label="Select employee status" required>
                 <option selected disabled value="">Select employee status</option>
                 <option value="Hired">Hired</option>
                 <option value="Interviewing">Interviewing</option>
                 <option value="Fired">Fired</option>
               </select><br>
 
-              <select id="location" name="location" class="form-select" aria-label="Select working location" required>
+              <select id="update_location" name="location" class="form-select" aria-label="Select working location" required>
                 <option selected disabled value="">Select working location</option>
                 <option value="Office">Office</option>
                 <option value="Remote">Remote</option>
               </select><br>
 
               <label for="job_title" class="form-label">Job Title:</label>
-              <input class="form-control" type="text" id="job_title" name="job_title" required><br>
+              <input class="form-control" type="text" id="update_job_title" name="job_title" required><br>
 
               <button class="btn btn-success col-md-6" data-bs-dismiss="modal" aria-label="Close">Submit</button>
 
@@ -145,6 +145,11 @@
     document.addEventListener("DOMContentLoaded", async function() {
       await fetchEmployeesData()
     })
+
+    function resetForm(formId) {
+      const form = document.getElementById(formId);
+      form.reset();
+    }
 
     async function fetchEmployeesData() {
       await fetch('/routers/manager_router.php?action=getAllEmployees', {
@@ -194,6 +199,7 @@
       }).then(async () => {
         await fetchEmployeesData()
         closeModal('addNewEmployeeModal')
+        resetForm('addNewEmployeeModalForm');
       }).catch(error => console.error('Error registering new employee:', error));
     }
 
@@ -211,6 +217,7 @@
           if (response.ok) {
             await fetchEmployeesData()
             closeModal('updateEmployeeModal');
+            resetForm('updateEmployeeModalForm');
           }
         })
         .catch(error => console.error('Error updating employee data:', error));
