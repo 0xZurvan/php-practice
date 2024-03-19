@@ -56,7 +56,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="modalForm" onsubmit="submitModalForm(event)" class="was-validated">
+            <form id="modalForm" class="was-validated" onsubmit="submitModalForm(event)">
 
               <label for="name" class="form-label">Name:</label>
               <input class="form-control" type="text" id="name" name="name" required><br>
@@ -83,7 +83,7 @@
               <label for="job_title" class="form-label">Job Title:</label>
               <input class="form-control" type="text" id="job_title" name="job_title" required><br>
 
-              <button type="submit" class="btn btn-success col-md-6" data-bs-dismiss="modal" aria-label="Close">Submit</button>
+              <button class="btn btn-success col-md-6" data-bs-dismiss="modal" aria-label="Close">Submit</button>
 
             </form>
           </div>

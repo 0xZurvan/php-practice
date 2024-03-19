@@ -67,11 +67,41 @@ class ManagerModel
         return false;
       }
     } catch (PDOException $e) {
-      // Handle exceptions
       echo 'Error: ' . $e->getMessage();
       return false;
     }
   }
+
+  // Update
+  public function updateEmployee($id, $name, $salary, $insurance_id, $status, $location, $job_title)
+{
+  try {
+    // Prepare the SQL query
+    $query = 'UPDATE employees SET name = :name, salary = :salary, insurance_id = :insurance_id, status = :status, location = :location, job_title = :job_title WHERE id = :id';
+    $stm = self::$pdo->prepare($query);
+
+    // Bind parameters
+    $stm->bindParam(':id', $id);
+    $stm->bindParam(':name', $name);
+    $stm->bindParam(':salary', $salary);
+    $stm->bindParam(':insurance_id', $insurance_id);
+    $stm->bindParam(':status', $status);
+    $stm->bindParam(':location', $location);
+    $stm->bindParam(':job_title', $job_title);
+
+    $success = $stm->execute();
+
+    if ($success) {
+      return true;
+    } else {
+      return false; 
+    }
+  } catch (PDOException $e) {
+    echo 'Error: ' . $e->getMessage();
+    return false;
+  }
+}
+
 
   // Delete
   public function deleteEmployeeById($id)
