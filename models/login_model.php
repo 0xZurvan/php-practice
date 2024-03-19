@@ -8,7 +8,8 @@ class LoginModel
 
   function __construct()
   {
-    self::$pdo = Database::connectDB();
+    $db = new Database();
+    self::$pdo = $db->connectDB();
   }
 
   public function login($name, $password)

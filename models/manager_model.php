@@ -1,7 +1,6 @@
 <?php
 
 require_once dirname(__DIR__) . '/db/database.php';
-
 class ManagerModel
 {
 
@@ -59,8 +58,18 @@ class ManagerModel
       $stm->bindParam(':status', $status);
       $stm->bindParam(':location', $location);
       $stm->bindParam(':job_title', $job_title);
+
+      $success = $stm->execute();
+
+      if ($success) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (PDOException $e) {
+      // Handle exceptions
       echo 'Error: ' . $e->getMessage();
+      return false;
     }
   }
 

@@ -10,7 +10,7 @@ class ManagerController
   {
     self::$managerModel = new ManagerModel();
   }
-  public static function getEmployeeByName($name)
+  public function getEmployeeByName($name)
   {
     $response = self::$managerModel->getEmployeeByName($name);
     if ($response) {
@@ -20,7 +20,7 @@ class ManagerController
     }
   }
 
-  public static function getAllEmployees()
+  public function getAllEmployees()
   {
     $response = self::$managerModel->getAllEmployees();
     if ($response) {
@@ -30,7 +30,7 @@ class ManagerController
     }
   }
 
-  public static function registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title)
+  public function registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title)
   {
     $response = self::$managerModel->registerNewEmployee($name, $salary, $insurance_id, $status, $location, $job_title);
     if ($response) {
@@ -40,7 +40,7 @@ class ManagerController
     }
   }
 
-  public static function deleteEmployeeById($id)
+  public function deleteEmployeeById($id)
   {
     $response = self::$managerModel->deleteEmployeeById($id);
     if ($response) {

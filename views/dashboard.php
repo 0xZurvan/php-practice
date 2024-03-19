@@ -56,54 +56,55 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form id="modalForm" name="modalForm" onsubmit="submitModalForm(event)">
+            <form id="modalForm" onsubmit="submitModalForm(event)" class="was-validated">
 
               <label for="name" class="form-label">Name:</label>
-              <input class="form-control" type="text" id="name" name="name"><br>
+              <input class="form-control" type="text" id="name" name="name" required><br>
 
               <label for="salary" class="form-label">Salary:</label>
-              <input class="form-control" type="number" id="salary" name="salary"><br>
+              <input class="form-control" type="number" id="salary" name="salary" required><br>
 
               <label for="insurance_id" class="form-label">Insurance ID:</label>
-              <input class="form-control" type="number" id="insurance_id" name="insurance_id"><br>
+              <input class="form-control" type="number" id="insurance_id" name="insurance_id" required><br>
 
-              <select id="status" name="status" class="form-select" aria-label="Select employee status">
-                <option selected>Select employee status</option>
+              <select id="status" name="status" class="form-select" aria-label="Select employee status" required>
+                <option selected disabled value="">Select employee status</option>
                 <option value="Hired">Hired</option>
                 <option value="Interviewing">Interviewing</option>
                 <option value="Fired">Fired</option>
               </select><br>
 
-              <select id="location" name="location" class="form-select" aria-label="Select working location">
-                <option selected>Select working location</option>
+              <select id="location" name="location" class="form-select" aria-label="Select working location" required>
+                <option selected disabled value="">Select working location</option>
                 <option value="Office">Office</option>
                 <option value="Remote">Remote</option>
               </select><br>
 
               <label for="job_title" class="form-label">Job Title:</label>
-              <input class="form-control" type="text" id="job_title" name="job_title"><br>
+              <input class="form-control" type="text" id="job_title" name="job_title" required><br>
 
-              <button type="submit" class="btn btn-success col-md-6">Submit</button>
+              <button type="submit" class="btn btn-success col-md-6" data-bs-dismiss="modal" aria-label="Close">Submit</button>
+
             </form>
           </div>
         </div>
       </div>
     </div>
 
+
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      fetchEmployeesData()
+    document.addEventListener("DOMContentLoaded", async function() {
+      await fetchEmployeesData()
     })
 
-    function fetchEmployeesData() {
-      fetch('/routers/manager_router.php?action=getAllEmployees', {
+    async function fetchEmployeesData() {
+      await fetch('/routers/manager_router.php?action=getAllEmployees', {
           method: 'GET'
         })
         .then(response => response.json())
         .then(employees => {
-          console.log('employees', employees)
           const tableBody = document.getElementById('employeesTable')
           tableBody.innerHTML = '';
           employees.forEach(employee => {
@@ -123,25 +124,23 @@
         .catch(error => console.error('Error fetching employees data:', error))
     }
 
-    const modalForm = document.getElementById('modalForm')
+    function closeModal() {
+      const modal = document.getElementById('addNewEmployeeModal');
+      const bootstrapModal = new bootstrap.Modal(modal);
+      bootstrapModal.hide();
+    }
 
-    function submitModalForm(event) {
-      event.preventDefault(); // Prevent default form submission
-      const formData = new FormData(modalForm);
-      fetch('/routers/manager_router.php?action=registerNewEmployee', {
+    async function submitModalForm(event) {
+      event.preventDefault()
+      const modalForm = document.getElementById('modalForm')
+      const formData = new FormData(modalForm)
+
+      await fetch('/routers/manager_router.php?action=registerNewEmployee', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
         body: formData
-      }).then(response => {
-        if (response.ok) {
-          console.log('Employee registered successfully');
-          // Optionally close the modal or show a success message
-        } else {
-          console.error('Error registering new employee:', response.statusText);
-          // Handle error appropriately
-        }
+      }).then(async () => {
+        await fetchEmployeesData()
+        closeModal()
       }).catch(error => console.error('Error registering new employee:', error));
     }
   </script>
