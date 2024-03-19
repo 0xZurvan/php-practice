@@ -40,7 +40,8 @@
             <th scope="col">Status</th>
             <th scope="col">Location</th>
             <th scope="col">Job Title</th>
-            <th scope="col"></th>
+            <th scope="col"></th> <!-- update -->
+            <th scope="col"></th> <!-- remove -->
           </tr>
         </thead>
         <tbody id="employeesTable">
@@ -164,12 +165,13 @@
             row.innerHTML = `
                 <td>${employee.id}</td>
                 <td>${employee.name}</td>
-                <td>${employee.salary}</td>
+                <td>$ ${employee.salary}</td>
                 <td>${employee.insurance_id}</td>
                 <td>${employee.status}</td>
                 <td>${employee.location}</td>
                 <td>${employee.job_title}</td>
                 <td><button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateEmployeeModal" onclick="openUpdateModal(${employee.id})">Update</button></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeEmployeeById(${employee.id})">Remove</button></td>
               `;
             tableBody.appendChild(row)
           });
@@ -221,6 +223,19 @@
           }
         })
         .catch(error => console.error('Error updating employee data:', error));
+    }
+
+    async function removeEmployeeById(employeeId) {
+      await fetch('/routers/manager_router.php?action=deleteEmployeeById', {
+          method: 'DELETE',
+          body: employeeId
+        })
+        .then(async (response) => {
+          if (response.ok) {
+            await fetchEmployeesData()
+          }
+        })
+        .catch(error => console.error('Error removing employee:', error));
     }
   </script>
 </body>

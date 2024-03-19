@@ -87,28 +87,23 @@ function handlePOSTRequests()
 
 function handleDELETERequests()
 {
-  parse_str(file_get_contents('php://input'), $delete_vars);
+  $input_data = file_get_contents('php://input');
+  $id = json_decode($input_data, true);
   $managerController = new ManagerController();
-  if (isset($delete_vars['action'])) {
 
-    switch ($delete_vars['action']) {
-      case 'deleteEmployeeById':
+  switch ($_GET['action']) {
+    case 'deleteEmployeeById':
+      if (isset($id)) {
+        echo $managerController->deleteEmployeeById($id);
+      } else {
+        http_response_code(400);
+        echo 'ID parameter is missing.';
+      }
+      break;
 
-        if (isset($delete_vars['id'])) {
-          $id = $delete_vars['id'];
-          echo $managerController->deleteEmployeeById($id);
-        } else {
-          echo 'ID parameter is missing.';
-        }
-        break;
-
-      default:
-        http_response_code(404);
-        echo 'Invalid action.';
-        break;
-    }
-  } else {
-    http_response_code(404);
-    echo 'Action parameter is missing.';
+    default:
+      http_response_code(404);
+      echo 'Invalid action.';
+      break;
   }
 }
